@@ -1,14 +1,13 @@
+using Cainos.PixelArtPlatformer_VillageProps;
 using Kronos.State;
 using Kronos.State.Player;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Kronos.Player
 {
     public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private float _movementSpeed = 2;
-        [SerializeField] private float _jumpForce = 2;
         [SerializeField] private Rigidbody2D _rigidbody;
         [SerializeField] private Animator _animator;
 
@@ -27,23 +26,14 @@ namespace Kronos.Player
         private void Update()
         {
             Walk();
-            Jump();
+
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider is TilemapCollider2D)
+            if (collision.collider.TryGetComponent(out Chest chest))
             {
-                _canJump = true;
-            }
-        }
-
-        private void Jump()
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && _canJump)
-            {
-                _rigidbody.AddForce(transform.up * _jumpForce);
-                _canJump = false;
+                chest.Open();
             }
         }
 
